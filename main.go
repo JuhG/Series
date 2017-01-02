@@ -1,23 +1,23 @@
 package main
 
 import (
+	"encoding/json"
+	"errors"
+	"html/template"
+	"io/ioutil"
 	"log"
 	"net/http"
-	"html/template"
 	"strings"
-	"encoding/json"
-	"io/ioutil"
-	"errors"
 )
 
 func main() {
 	PORT := "127.0.0.1:8080"
-	log.Print("Running server on "+ PORT)
+	log.Print("Running server on " + PORT)
 	http.HandleFunc("/s/", getMovieFromTitle)
 	http.HandleFunc("/search/", searchHandler)
 	http.HandleFunc("/", frontHandler)
 
-	log.Fatal( http.ListenAndServe(PORT, nil) )
+	log.Fatal(http.ListenAndServe(PORT, nil))
 }
 
 type Series struct {

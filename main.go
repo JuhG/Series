@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	PORT := "127.0.0.1:8080"
+	PORT := ":8080"
 	log.Print("Running server on " + PORT)
 	http.HandleFunc("/s/", getMovieFromTitle)
 	http.HandleFunc("/search/", searchHandler)

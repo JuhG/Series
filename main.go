@@ -8,16 +8,20 @@ import (
 	"log"
 	"net/http"
 	"strings"
+	"os"
 )
 
 func main() {
-	PORT := ":8080"
+	PORT := os.Getenv("PORT")
 	log.Print("Running server on " + PORT)
 	http.HandleFunc("/s/", getMovieFromTitle)
 	http.HandleFunc("/search/", searchHandler)
 	http.HandleFunc("/", frontHandler)
 
-	log.Fatal(http.ListenAndServe(PORT, nil))
+	err := http.ListenAndServe(":" + PORT, nil)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 type Series struct {

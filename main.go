@@ -12,7 +12,7 @@ import (
 )
 
 func main() {
-	PORT := os.Getenv("PORT")
+	PORT := getPort()
 	log.Print("Running server on " + PORT)
 	http.HandleFunc("/s/", getMovieFromTitle)
 	http.HandleFunc("/search/", searchHandler)
@@ -22,6 +22,14 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+func getPort() (PORT string) {
+	PORT = os.Getenv("PORT")
+	if PORT == "" {
+		PORT = "8080"
+	}
+	return
 }
 
 type Series struct {

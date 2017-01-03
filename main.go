@@ -6,15 +6,15 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"strings"
 	"os"
+	"strings"
 
 	"github.com/flosch/pongo2"
 )
 
 var (
 	tmpl = map[string]*pongo2.Template{
-		"home": pongo2.Must(pongo2.FromFile("templates/home.html")),
+		"home":   pongo2.Must(pongo2.FromFile("templates/home.html")),
 		"series": pongo2.Must(pongo2.FromFile("templates/series.html")),
 	}
 )
@@ -27,7 +27,7 @@ func main() {
 	http.HandleFunc("/search/", searchHandler)
 	http.HandleFunc("/", frontHandler)
 
-	log.Fatal(http.ListenAndServe(":" + PORT, nil))
+	log.Fatal(http.ListenAndServe(":"+PORT, nil))
 }
 
 func getPort() (PORT string) {

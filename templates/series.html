@@ -1,9 +1,12 @@
-<h1>{{.Title}} <span>({{.Year}})</span></h1>
-<p>{{.Plot}}</p>
+{% extends "layout.html" %}
+
+{% block title %}{{s.Title}}{% endblock %}
+
+{% block content %}
+<h1>{{s.Title}}<span>({{s.Year}})</span></h1>
+<p>{{s.Plot}}</p>
 
 <hr>
 <h3>New search</h3>
-<form action="/search/" method="GET">
-    <input type="text" name="search">
-    <input type="submit" value="Save">
-</form>
+{% include "form.html" %}
+{% endblock %}

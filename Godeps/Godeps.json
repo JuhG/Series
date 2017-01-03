@@ -3,6 +3,10 @@
 	"GoVersion": "go1.7",
 	"GodepVersion": "v75",
 	"Deps": [
-      "github.com/flosch/pongo2"
+		{
+			"ImportPath": "github.com/flosch/pongo2",
+			"Comment": "v1.0-rc1-211-g22499f9",
+			"Rev": "22499f94d3d56c7238591344a6902715d0b8fbbf"
+		}
 	]
 }

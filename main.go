@@ -10,6 +10,8 @@ import (
 	"strings"
 
 	"github.com/flosch/pongo2"
+	"github.com/gorilla/mux"
+	"strconv"
 )
 
 var (
@@ -23,9 +25,13 @@ func main() {
 
 	PORT := getPort()
 	log.Print("Running server on " + PORT)
-	http.HandleFunc("/s/", getMovieFromTitle)
-	http.HandleFunc("/search/", searchHandler)
-	http.HandleFunc("/", frontHandler)
+
+	r := mux.NewRouter().StrictSlash(true)
+	r.HandleFunc("/", homeHandler)
+	r.HandleFunc("/search/", searchHandler)
+	r.HandleFunc("/s/{title}/", seriesHandler)
+	r.HandleFunc("/s/{title}/{season:[0-9]+}/", seriesHandler)
+	http.Handle("/", r)
 
 	log.Fatal(http.ListenAndServe(":"+PORT, nil))
 }
@@ -39,14 +45,42 @@ func getPort() (PORT string) {
 }
 
 type Series struct {
-	Response, Title, Plot, Year string
+	Response,
+	Title,
+	Plot,
+	Year,
+	TotalSeasons string
 }
 
-func getMovieFromTitle(w http.ResponseWriter, r *http.Request) {
-	title := r.URL.Path[len("/s/"):]
-	s, _ := getData(title)
-	err := tmpl["series"].ExecuteWriter(pongo2.Context{
-		"s": s,
+func seriesHandler(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	title := vars["title"]
+	season := vars["season"]
+
+	series, _ := getData(title)
+	totalSeasons, err := strconv.ParseInt(series.TotalSeasons, 10, 0)
+	if err != nil {
+		log.Fatal(err)
+	}
+	if season != "" {
+		number, err := strconv.ParseInt(season, 10, 0)
+		if err != nil {
+			log.Fatal(err)
+		}
+		if number > totalSeasons || number == 0 {
+			w.Write([]byte("Nincs is annyi évad te kis trükkös"))
+			return
+		}
+	}
+
+	seasons := make([]int, totalSeasons, totalSeasons)
+	for i := 0; i < int(totalSeasons); i++ {
+		seasons[i] = i + 1
+	}
+	err = tmpl["series"].ExecuteWriter(pongo2.Context{
+		"s":       series,
+		"season":  season,
+		"seasons": seasons,
 	}, w)
 	if err != nil {
 		log.Fatal(err)
@@ -55,15 +89,17 @@ func getMovieFromTitle(w http.ResponseWriter, r *http.Request) {
 
 func searchHandler(w http.ResponseWriter, r *http.Request) {
 	title := r.FormValue("search")
-	s, err := getData(title)
+	series, err := getData(title)
 	if err != nil {
 		http.Redirect(w, r, r.Referer(), http.StatusFound)
 	}
-	title = strings.Replace(s.Title, " ", "+", -1)
-	http.Redirect(w, r, "/s/"+title, http.StatusFound)
+
+	title = titleToURL(series.Title)
+	url := "/s/" + title + "/"
+	http.Redirect(w, r, url, http.StatusFound)
 }
 
-func frontHandler(w http.ResponseWriter, r *http.Request) {
+func homeHandler(w http.ResponseWriter, r *http.Request) {
 	err := tmpl["home"].ExecuteWriter(nil, w)
 	if err != nil {
 		log.Fatal(err)
@@ -71,10 +107,8 @@ func frontHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func getData(search string) (Series, error) {
-	// encode the spaces
-	title := strings.Replace(search, " ", "+", -1)
-
-	res, err := http.Get("http://www.omdbapi.com/?type=series&tomatoes=true&t=" + title)
+	title := titleToURL(search)
+	res, err := http.Get("http://www.omdbapi.com/?type=series&t=" + title)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -91,4 +125,11 @@ func getData(search string) (Series, error) {
 		return s, errors.New("No response found")
 	}
 	return s, nil
+}
+
+func titleToURL(search string) (title string) {
+	title = search
+	title = strings.Replace(title, " ", "+", -1)
+	title = strings.ToLower(title)
+	return
 }

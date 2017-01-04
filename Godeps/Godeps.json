@@ -2,14 +2,16 @@
 	"ImportPath": "github.com/JuhG/Series",
 	"GoVersion": "go1.7",
 	"GodepVersion": "v75",
-	"Packages": [
-		"./..."
-	],
 	"Deps": [
 		{
 			"ImportPath": "github.com/flosch/pongo2",
 			"Comment": "v1.0-rc1-211-g22499f9",
 			"Rev": "22499f94d3d56c7238591344a6902715d0b8fbbf"
+		},
+		{
+			"ImportPath": "github.com/gorilla/mux",
+			"Comment": "v1.1-27-g757bef9",
+			"Rev": "757bef944d0f21880861c2dd9c871ca543023cba"
 		}
 	]
 }

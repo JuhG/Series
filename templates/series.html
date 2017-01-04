@@ -6,6 +6,15 @@
 <h1>{{s.Title}}<span>({{s.Year}})</span></h1>
 <p>{{s.Plot}}</p>
 
+{% if season %}
+    <h2>Season {{season}} of {{s.TotalSeasons}}</h2>
+{% else %}
+    <h2>Total seasons: {{s.TotalSeasons}}</h2>
+    {% for i in seasons %}
+        <a href="{{i}}/">{{i}}</a>
+    {% endfor %}
+{% endif %}
+
 <hr>
 <h3>New search</h3>
 {% include "form.html" %}

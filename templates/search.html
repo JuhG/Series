@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h1>Results for {{search}}</h1>
+<p>Only show results with more than one vote on <a target="_blank" href="https://www.themoviedb.org/">https://www.themoviedb.org/</a></p>
+
+{% for result in results %}
+    {% include "teaser.html" %}
+{% endfor %}
+
+<hr>
+<h3>New search</h3>
+{% include "form.html" %}
+{% endblock %}

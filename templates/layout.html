@@ -2,8 +2,12 @@
 <html>
 <head>
     <title>{% block title %}Series HU{% endblock %}</title>
+    <style>
+        .seriesLink { text-decoration: none; color: black; }
+        .seriesLink:hover { color: tomato; }
+    </style>
 </head>
-<body>
+<body style="background-color: #fafafa;">
     <a href="/">HOME</a>
     {% block content %}{% endblock %}
 </body>

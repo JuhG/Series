@@ -1,0 +1,13 @@
+<hr>
+<a class="seriesLink" href="/s/{{result.Id}}/">
+    <h3>
+        {{result.Name}}
+        {% if result.Name != result.Original_name %}[{{result.Original_name}}]{% endif %}
+        {% if result.First_air_date %}({{result.First_air_date}}){% endif %}
+    </h3>
+    <p>
+        Popularity: {{result.Popularity}}
+        -
+        Votes: {{result.Vote_average_string}} from {{result.Vote_count}} votes
+    </p>
+</a>

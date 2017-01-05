@@ -3,15 +3,31 @@
 {% block title %}{{s.Title}}{% endblock %}
 
 {% block content %}
-<h1>{{s.Title}}<span>({{s.Year}})</span></h1>
-<p>{{s.Plot}}</p>
+<h1>
+    {{s.Name}}
+    {% if s.Name != s.Original_name %}[{{s.Original_name}}]{% endif %}
+    {% if s.First_air_date %}({{s.First_air_date}}){% endif %}
+</h1>
+<p>
+    Popularity: {{s.Popularity}}
+    -
+    Votes: {{s.Vote_average_string}} from {{s.Vote_count}} votes
+</p>
+<p>{{s.Overview}}</p>
 
 {% if season %}
-    <h2>Season {{season}} of {{s.TotalSeasons}}</h2>
+    <h2>Season {{season}} of {{s.Number_of_seasons}}</h2>
 {% else %}
-    <h2>Total seasons: {{s.TotalSeasons}}</h2>
+    <h2>Évadok: {{s.Number_of_seasons}}</h2>
     {% for i in seasons %}
         <a href="{{i}}/">{{i}}</a>
+    {% endfor %}
+{% endif %}
+
+{% if related %}
+    <h2>Hasonló sorik</h2>
+    {% for result in related %}
+        {% include "teaser.html" %}
     {% endfor %}
 {% endif %}
 

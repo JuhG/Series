@@ -55,6 +55,9 @@ func getAllResults(search string) (series []Series, err error) {
 			if err == nil {
 				series = extractResults(series, data)
 			}
+			if i > 5 {
+				break
+			}
 		}
 	}
 	// Sorting by popularity

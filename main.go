@@ -179,8 +179,16 @@ func getRelated(id string) ([]Series, error) {
 	if len(response.Results) == 0 {
 		return []Series{}, errors.New("No series was found!")
 	}
+
+	// Cleanup and sorting
 	series := response.Results
 	sort.Sort(ByPopularity(series))
+	var cleaned []Series
+	for i, s := range series {
+		if i < 5 {
+			cleaned = append(cleaned, s.cleanUp())
+		}
+	}
 
-	return series, nil
+	return cleaned, nil
 }

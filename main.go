@@ -13,6 +13,8 @@ import (
 	"io/ioutil"
 	"sort"
 	"strings"
+
+//	_"serieshu/database"
 )
 
 var (
@@ -37,6 +39,7 @@ func main() {
 	r.HandleFunc("/s/{id:[0-9]+}/", seriesHandler)
 	//r.HandleFunc("/s/{id:[0-9]+}/{season:[0-9]+}/", seriesHandler)
 	http.Handle("/", r)
+//	database.Series_get_rate("Walking Dead")
 
 	log.Fatal(http.ListenAndServe(":"+PORT, nil))
 }
